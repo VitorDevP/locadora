@@ -19,7 +19,7 @@ const insertMany = (data, next) => {
     })
 
     Promise.all([movie, locadora]).then(([movie, locadora]) => {
-        if(movie.data[0].nTotal > locadora.data.length){
+        if(movie.data.length == 1 && movie.data[0].nTotal > locadora.data.length){
             db.insertMany(locadoraModel, data, (result) => {
                 next(result);
             });
