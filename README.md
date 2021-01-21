@@ -30,6 +30,33 @@ Login
 - GET - localhost:3000/api/v1/auth/ - necessita body com email e senha para autenticar
 - GET - localhost:3000/api/v1/auth/logout/
 
+Payloads
+filmes
+{
+    "title":STRING,
+    "director": STRING,
+    "nTotal": INTEGER
+}
+
+usuarios
+{
+    "email": STRING,
+    "password": STRING,
+    "username": STRING
+}
+
+autenticação
+{
+    "email": STRING,
+    "password": STRING,
+}
+
+locação
+{
+"movieId": INTEGER,
+"userId": INTEGER,
+"volumes": INTEGER
+}
 
 todas as informações persistem em um bando mysql, a propria aplicação cria as tabelas dentro do database se as mesmas não existirem, os schemas podem ser alterados
 pelos modelos localizados dentro da pasta model
