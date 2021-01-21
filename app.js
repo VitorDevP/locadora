@@ -12,16 +12,6 @@ const historyRoute = require('./app/routes/history.route');
 const usersRoute = require('./app/routes/user.route');
 const authRoute = require('./app/routes/auth.route');
 
-//Set up mongoose connection
-var mongoose = require('mongoose');
-var mongoDB = process.env.mongoURL;
-mongoose.connect(mongoDB, { useNewUrlParser: true , useUnifiedTopology: true});
-var db = mongoose.connection;
-db.once("open", function() {
-  console.log("MongoDB database connection established successfully");
-});
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
 var app = express();
 
 // view engine setup

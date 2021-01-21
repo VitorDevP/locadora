@@ -6,7 +6,7 @@ const {verifyAuth} = require('../utils/auth.utils');
 const locadoraController = require('../controller/locadora.controller');
 
 router.get('/:id?', verifyAuth, (req, res) => {
-    locadoraController.find(req.params.id ? {_id: req.params.id} : {}, req.query ? req.query : {}, (result) => {
+    locadoraController.find(req.params.id ? {id: req.params.id} : {}, req.query ? req.query : {}, (result) => {
         res.status(result.statusCode).send(result.data ? result.data : result.error)
     });    
 });

@@ -1,18 +1,18 @@
-const locadoraModel = require('../models/locadora.model');
 const db = require('./db.service');
-const movieModel = require('../models/movie.model')
+const locadoraModel = require('../models/locadora.model')(db.connectionDB());
+const movieModel = require('../models/movie.model')(db.connectionDB());
 const responseRequest = require('../utils/httpResponse.utils');
 
 const insertMany = (data, next) => {
     const movie = new Promise((resolve, reject) => {
-        db.find(movieModel, {_id: data.movieId},null, (result) => {
+        db.find(movieModel, {id: data.movieId},{}, (result) => {
             if(result.error == null || result.error == undefined) resolve(result)
             else reject(result.error);
         })
     })
 
     const locadora = new Promise((resolve, reject) => {
-        db.find(locadoraModel, {movieId: data.movieId},null, (locadoraResult) => {
+        db.find(locadoraModel, {movieId: data.movieId},{}, (locadoraResult) => {
             if(locadoraResult.error == null || locadoraResult.error == undefined) resolve(locadoraResult)
             else reject(locadoraResult.error);
         })

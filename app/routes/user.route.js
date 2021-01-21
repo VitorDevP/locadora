@@ -5,8 +5,8 @@ const {verifyAuth} = require('../utils/auth.utils');
 
 const userController = require('../controller/user.controller');
 
-router.get('/:id?', (req, res) => {
-    userController.find(req.params.id ? {_id: req.params.id} : {}, req.query ? req.query : {}, (result) => {
+router.get('/:id?', verifyAuth, (req, res) => {
+    userController.find(req.params.id ? {id: req.params.id} : {}, req.query ? req.query : {}, (result) => {
         res.status(result.statusCode).send(result.data ? result.data : result.error)
     });    
 });

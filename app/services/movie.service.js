@@ -3,13 +3,13 @@ const db = require('./db.service');
 const productModel = require('../models/movie.model')(db.connectionDB());
 
 const insertMany = (data, next) => {
-    db.create(productModel, data, (result) => {
+    db.insertMany(productModel, data, (result) => {
         next(result);
     });
 }
 
 const find = (query, optional, next) => {
-    db.findMysql(productModel, query, {limit: parseInt(optional.limit), skip: (optional.page*optional.limit)},(result) => {
+    db.find(productModel, query, {limit: parseInt(optional.limit), skip: (optional.page*optional.limit)},(result) => {
         next(result);
     })
 }

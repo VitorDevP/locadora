@@ -16,14 +16,14 @@ const { Sequelize } = require('sequelize');
 // module.exports = mongoose.model('Movie', model);
 
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('Movie', {
+  const model = sequelize.define('Movie', {
     title: Sequelize.STRING,
     director: Sequelize.STRING,
     nTotal: Sequelize.INTEGER,
   });
 
-  User.sync().then(() => {
+  model.sync().then(() => {
     console.log("initialized")
   })
-  return User;
+  return model;
 }

@@ -1,5 +1,5 @@
-const userModel = require('../models/user.model');
 const db = require('./db.service');
+const userModel = require('../models/user.model')(db.connectionDB());
 const crypt = require('bcryptjs')
 
 const insertMany = (data, next) => {

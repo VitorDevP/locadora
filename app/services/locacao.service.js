@@ -1,5 +1,5 @@
 const db = require('./db.service');
-const locacaoModel = require('../models/history.model');
+const locacaoModel = require('../models/history.model')(db.connectionDB());
 
 const insertMany = (data, next) => {
     db.insertMany(locacaoModel, data, (result) => {

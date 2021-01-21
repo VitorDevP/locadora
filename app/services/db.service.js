@@ -2,7 +2,7 @@ var response = require('../utils/httpResponse.utils');
 
 const Sequelize = require('sequelize');
 
-const path = 'mysql://root:password@localhost:3306/app';
+const path = `mysql://${process.env.mysqlUser}:${process.env.mysqlpassword}@${process.env.mysqlHost}:${process.env.mysqlPort}/${process.env.db}`;
 const sequelize = new Sequelize(path, { operatorsAliases: false });
 
 sequelize.authenticate().then(() => {
@@ -10,15 +10,12 @@ sequelize.authenticate().then(() => {
 }).catch(err => {
   console.error('Unable to connect to the database:', err);
 })
-// .finally(() => {
-//   sequelize.close();
-// });
 
-const connectionDB = (next) => {
+const connectionDB = () => {
     return sequelize;
 }
 
-const create = (model, data, next) => {
+const insertMany = (model, data, next) => {
     model.bulkCreate(Array.isArray(data) ? data : [data]).then((result) => {
         if(result){
             next(response(201, null, result));
@@ -29,7 +26,7 @@ const create = (model, data, next) => {
     } )
 }
 
-const findMysql = (model, query, optional, next) => {
+const find = (model, query, optional, next) => {
     model.findAll({
         where: query,
         offset: optional.skip ? optional.skip : null,
@@ -37,50 +34,26 @@ const findMysql = (model, query, optional, next) => {
     }).then((result) => {
         next(response(200, null, result));
     }).catch((err) => {
-        response(500, "could not get")
+        next(response(500, "could not get"))
     });
-}
-
-const insertMany = (model, data, next) => {
-    model.insertMany(data, (err, result) => {
-        next(response(err ? 500 : 201, err, result));
-    });
-}
-
-const find = (model, query, optional, next) => {
-    model.find(query, null, optional,(err, result) => {
-        next(response(err ? 500 : 200, err, result));
-    })
 }
 
 const update = (model, id, data, next) => {
-    model.findByIdAndUpdate( id, data, (err, result) => {
-        let status = 404
-
-        if(err) {
-            status = 500;
-        }
-        else if(result){
-            status = 202;
-        }
-
-        next(response(status, err, result));
+    model.update(data, {where: {id: id}}).then((result) => {
+        if(result) next(response(202, null, {status: "UPDATED"}))
+        else next(response(404, {error: "Could not found data to update"}))
+    }).catch((err) => {
+        next(response(500, "could not update"))
     })
 }
 
 const remove = (model, id, next) => {
-    model.findByIdAndDelete(id, (err, result) => {
-        let status = 404
-
-        if(err) {
-            status = 500;
-        }
-        else if(result){
-            status = 204;
-        }       
-
-        next(response(status, err, result));
+    model.destroy({where: {id: id}}).then((result) => {
+        if(result) next(response(203, null, {status:"DELETED"}))
+        else next(response(404,{error: "Could not found data to delete"}))
+    }).catch((err) => {
+        next(response(500, "could not delete, internal error"))
     })
 }
 
-module.exports = {insertMany, find, update, remove, connectionDB, create, findMysql}
+module.exports = {insertMany, find, update, remove, connectionDB}

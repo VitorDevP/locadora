@@ -37,7 +37,7 @@ const remove = (id, next) => {
 }
 
 const devolucao = (id, next) => {
-    find({_id: id}, {}, (result) => {
+    find({id: id}, {}, (result) => {
         if(result.data != null && result.data.length == 1){
             const removeLocadora = new Promise((resolve, reject) => {
                 try{
