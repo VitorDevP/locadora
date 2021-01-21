@@ -25,7 +25,7 @@ const insertMany = (data, next) => {
             });
         }
         else{
-            next(responseRequest(403,null,"No autorized, All available movies were rented"))
+            next(responseRequest(200,null,"No autorized, All available movies were rented"))
         }        
     }) 
 }
