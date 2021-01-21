@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const {verifyAuth} = require('../utils/auth.utils');
+const {verifyAuth, getToken} = require('../utils/auth.utils');
 
 const authController = require('../controller/auth.controller');
 
@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/logout', verifyAuth, (req, res) => {
-    authController.find(req.body ? req.body : {}, (result) => {
+    authController.logout(getToken(req), (result) => {
         res.status(result.statusCode).send(result.data ? result.data : result.error)
     });    
 });
