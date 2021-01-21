@@ -5,28 +5,12 @@ const {verifyAuth} = require('../utils/auth.utils');
 
 const userController = require('../controller/user.controller');
 
-router.get('/:id?', verifyAuth, (req, res) => {
-    userController.find(req.params.id ? {id: req.params.id} : {}, req.query ? req.query : {}, (result) => {
-        res.status(result.statusCode).send(result.data ? result.data : result.error)
-    });    
-});
+router.get('/:id?', verifyAuth, userController.find);
 
-router.post('/', (req, res) => {
-    userController.insert(req.body, (result) => {
-        res.status(result.statusCode).send(result.data ? result.data : result.error)
-    });
-});
+router.post('/', userController.insert);
 
-router.put('/:id', verifyAuth, (req,res) => {
-    userController.update(req.params.id, req.body, (result) => {
-        res.status(result.statusCode).send(result.data ? result.data : result.error)
-    })
-})
+router.put('/:id', verifyAuth, userController.update)
 
-router.delete('/:id', verifyAuth, (req, res) => {
-    userController.remove(req.params.id, (result) => {
-        res.status(result.statusCode).send(result.data ? result.data : result.error)
-    })
-})
+router.delete('/:id', verifyAuth, userController.remove)
 
 module.exports = router;

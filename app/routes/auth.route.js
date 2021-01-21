@@ -5,17 +5,8 @@ const {verifyAuth, getToken} = require('../utils/auth.utils');
 
 const authController = require('../controller/auth.controller');
 
-router.get('/', (req, res) => {
-    authController.login(req.body ? req.body : {}, (result) => {
-        res.status(result.statusCode).send(result.data ? result.data : result.error)
-    });    
-});
+router.get('/', authController.login)
 
-router.get('/logout', verifyAuth, (req, res) => {
-    authController.logout(getToken(req), (result) => {
-        res.status(result.statusCode).send(result.data ? result.data : result.error)
-    });    
-});
-
+router.get('/logout', verifyAuth, authController.logout)
 
 module.exports = router;
