@@ -5,9 +5,14 @@ const login = (data, next) => {
     if(data['email'] && data['password']){
         authService.login(data, (result) => {
             next(result)
-        })
-    }
-    
+        });
+    }    
 }
 
-module.exports = {login};
+const logout = (token, next) => {
+    authService.logout(token, (result) => {
+        next(result);
+    });
+}
+
+module.exports = {login, logout};
