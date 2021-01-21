@@ -6,11 +6,11 @@ var logger = require('morgan');
 
 require('dotenv').config();
 
-const movieRoute = require('./app/routes/movies.route');
-const locadoraRoute = require('./app/routes/locadora.route');
-const historyRoute = require('./app/routes/history.route');
-const usersRoute = require('./app/routes/user.route');
-const authRoute = require('./app/routes/auth.route');
+const movieRoute = require('./routes/movies.route');
+const locadoraRoute = require('./routes/locadora.route');
+const historyRoute = require('./routes/history.route');
+const usersRoute = require('./routes/user.route');
+const authRoute = require('./routes/auth.route');
 
 var app = express();
 
