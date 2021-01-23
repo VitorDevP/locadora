@@ -47,8 +47,8 @@ const update = (model, id, data, next) => {
     })
 }
 
-const remove = (model, id, next) => {
-    model.destroy({where: {id: id}}).then((result) => {
+const remove = (model, param, next) => {
+    model.destroy({where: param}).then((result) => {
         if(result) next(response(203, null, {status:"DELETED"}))
         else next(response(404,{error: "Could not found data to delete"}))
     }).catch((err) => {

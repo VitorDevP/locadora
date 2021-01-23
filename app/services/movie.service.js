@@ -23,7 +23,7 @@ const update = (id, data, next) => {
 }
 
 const remove = (id, next) => {
-    db.remove(productModel, id, (result) => {
+    db.remove(productModel, {id: id}, (result) => {
         if(result.statusCode == 404) result['error'] = {message: "Movie ID not found"}
 
         next(result)

@@ -1,9 +1,10 @@
 const request = require('supertest')
 const app = require('../app/app')
 
-describe('Post Endpoints', () => {
+describe('Endpoints', () => {
     var productCreated = null;
     var token = null;
+    var alocateMovie = null;
 
     it('should create a jwt token', async () => {
       const res = await request(app)
@@ -52,6 +53,56 @@ describe('Post Endpoints', () => {
   it('should get product list', async () => {
     const res = await request(app)
       .get('/api/v1/movies/')
+      .set({'x-access-token': token.jwt})
+
+    expect(res.statusCode).toEqual(200)
+    expect(res.body.length).toBeGreaterThan(0)
+  })
+
+  it('should alocate movie', async () => {
+    const res = await request(app)
+      .post('/api/v1/locadora/')
+      .set({'x-access-token': token.jwt})
+      .send({
+        movieId: productCreated[0].id,
+        userId: 1,
+        volumes: 1
+      })
+
+    alocateMovie = res.body;
+    expect(res.statusCode).toEqual(201)
+    expect(res.body.length).toBeGreaterThan(0)
+  })
+
+  it('should get movie alocate list', async () => {
+    const res = await request(app)
+      .get('/api/v1/locadora/')
+      .set({'x-access-token': token.jwt})
+
+    expect(res.statusCode).toEqual(200)
+    expect(res.body.length).toBeGreaterThan(0)
+  })
+
+  it('should get movie alocate by id', async () => {
+    const res = await request(app)
+      .get('/api/v1/locadora/'+alocateMovie[0].id)
+      .set({'x-access-token': token.jwt})
+
+    expect(res.statusCode).toEqual(200)
+    expect(res.body.length).toBeGreaterThan(0)
+  })
+
+  it('should get movie devolução', async () => {
+    const res = await request(app)
+      .get('/api/v1/locadora/devolucao/'+alocateMovie[0].id)
+      .set({'x-access-token': token.jwt})
+
+    expect(res.statusCode).toEqual(200)
+  })
+
+  it('should get movie alocate by id', async () => {
+    const res = await request(app)
+      .get('/api/v1/history/')
       .set({'x-access-token': token.jwt})
 
     expect(res.statusCode).toEqual(200)

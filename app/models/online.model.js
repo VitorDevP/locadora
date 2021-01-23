@@ -1,6 +1,6 @@
 const { Sequelize } = require('sequelize');
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
     const model = sequelize.define('Online', {
       token: Sequelize.STRING,
       email: Sequelize.STRING
