@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const {verifyAuth, getToken} = require('../utils/auth.utils');
+const {verifyAuth} = require('../utils/auth.utils');
 
 const authController = require('../controller/auth.controller');
 

@@ -1,17 +1,17 @@
-const userModel = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const db = require('../services/db.service');
 const onlineModel = require('../models/online.model')(db.connectionDB());
 const crypt = require('bcryptjs')
+const fs = require('fs')
 
 function verifyAuth(req, res, next){
-    const token = req.headers['x-access-token'];
+    const token = getToken(req);
 
     if(token == null || token == undefined){
-        res.status(401).send({message: "No token provided"})
+        res.status(401).send({auth: false, message: "No token provided"})
     }
     else{
-        jwt.verify(token, process.env.jwtSecret, (err, decoded) => {
+        jwtDecode(token, (err, decoded) => {
             if(err){
                 res.status(401).send({auth: false, error: "Failed to authenticate Token"})
             } 
@@ -29,21 +29,42 @@ function verifyAuth(req, res, next){
                     } 
                 });
             }
-        })
-    }   
-    
+        });
+    }       
 }
 
 const generateJWT = (data, next) => {
-    const token = jwt.sign(data, process.env.jwtSecret, {
-        expiresIn: parseInt(process.env.jwtExpire )
-    });
+    fs.readFile(process.env.jwtSecret, 'utf8', (err, key) => {
+        if(err){
+            console.log("error: no private key for jwt")
+            next();
+        }
+        else{
+            const token = jwt.sign(data, key, {
+                expiresIn: parseInt(process.env.jwtExpire),
+                algorithm: "RS256"
+            });
 
-    next(token)
+            next(token)
+        }            
+    });    
 }
 
 const getToken = (headerRequest) => {
     return headerRequest.headers['x-access-token'] ? headerRequest.headers['x-access-token'] : {};
 }
 
-module.exports = {verifyAuth, generateJWT, getToken}
+function jwtDecode(token, next){
+    fs.readFile(process.env.jwtPublic, 'utf8', (err, key) => {
+        if(err){
+            next(err)
+        }
+        else{
+            jwt.verify(token, key, {algorithms: "RS256" }, (err, decoded) => {
+                next(err, decoded)
+            })
+        }        
+    });
+}
+
+module.exports = {verifyAuth, generateJWT, getToken, jwtDecode}
