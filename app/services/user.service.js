@@ -27,7 +27,7 @@ const update = (id, data, next) => {
 }
 
 const remove = (id, next) => {
-    db.remove(userModel, id, (result) => {
+    db.remove(userModel, {id: id}, (result) => {
         if(result.statusCode == 404) result['error'] = {message: "Movie ID not found"}
 
         next(result)

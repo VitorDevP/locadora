@@ -1,6 +1,6 @@
 
 const authService = require('../services/auth.service');
-const {getToken} = require('../utils/auth.utils');
+const {getToken, jwtDecode} = require('../utils/auth.utils');
 
 const login = (req, res) => {
     if(req.body.email && req.body.password){
@@ -11,9 +11,17 @@ const login = (req, res) => {
 }
 
 const logout = (req, res) => {    
-    authService.logout(getToken(req), (result) => {
-        res.status(result.statusCode).send(result.data ? result.data : result.error)
-    });
+    jwtDecode(getToken(req), (err, decoded) => {
+        if(err){
+             res.status(500).send({error: "Could not sign out"});
+        }
+        else {
+            authService.logout(decoded.username, (result) => {
+                res.status(result.statusCode).send(result.data ? result.data : result.error)
+            });
+        }
+    })
+    
 }
 
 module.exports = {login, logout};

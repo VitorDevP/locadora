@@ -45,7 +45,7 @@ const update = (id, data, next) => {
 }
 
 const remove = (id, next) => {
-    db.remove(locadoraModel, id, (result) => {
+    db.remove(locadoraModel, {id: id}, (result) => {
         if(result.statusCode == 404) result['error'] = {message: "Movie ID not found"}
 
         next(result)
